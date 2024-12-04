@@ -1,4 +1,10 @@
 # TP de base de datos
+Integrantes
+> Nicolas Natale 108590
+
+> Pedro Bubuli 103452
+
+> Julian Sanchez 104590
 
 # Informe / metodo de utilización
 
@@ -14,7 +20,7 @@ Para este tp se hizo uso de las siguientes tecnologigias:
 - Se cuenta con un archivo **index.html** que es la interfaz grafica, dentro de la misma se prodra intercambiar entre base de dato *relacional* (MySQL) y una no *relacional* (NoSQL - MongoDB) como asi poder visualizar y modificar los registros
 - Un archivo **send.js** para manejar los envios
 - Un **back.js** para manejar el form del la interfaz grafica
-- un **server.js** para manejar MongoDB
+- un **server.js** para manejar MongoDB y MySQL
 
 
 # Metodo de instalacion
@@ -54,6 +60,30 @@ CREATE TABLE records (
 );
 ```
 
+Verificamos que la tabla se creo
+```
+SHOW TABLES;
+```
+
+Deberia mostrar algo como
+```
++----------------+
+| Tables_in_your_mysql_database |
++----------------+
+| records         |
++----------------+
+```
+
+Tambien podemos verificar la estructura de la tabla
+```
+DESCRIBE records;
+```
+
+Para salir de MySql solo basta con escribir en la terminal
+```
+exit
+```
+
 ## configurar MongoDB:
 No necesitas configuraciones adicionales. MongoDB creará la base y la colección automáticamente.
 
@@ -61,3 +91,11 @@ No necesitas configuraciones adicionales. MongoDB creará la base y la colecció
 ```
 node server.js
 ```
+
+Puertos donde se levanta el server, la base de datos y el front
+- Frontend (Live Server o similar)	5500 / 3000 (default)
+- Backend (Node.js/Express)	3000 (default)
+- MySQL	3306 (default)
+- MongoDB	27017 (default)
+
+> Luego de levantar el backend, el front puede levantarse en localhost sin ningun problema para probar el guardado, elimininacion, modificacion y visualizacion de registros (funciones CRUD)
