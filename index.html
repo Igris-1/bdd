@@ -131,86 +131,110 @@
         </div>
     </main>
     <script>
-        let mysqlDatabase = [];
-        let mongodbDatabase = [];
-        let nextId = 1;
-
+        // Referencias a elementos HTML
         const form = document.getElementById('data-form');
-        const mysqlTable = document.getElementById('mysql-table');
-        const mongodbTable = document.getElementById('mongodb-table');
-
-        function renderTable(database, tableElement) {
-            tableElement.innerHTML = '';
-            database.forEach(record => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.id}</td>
-                    <td>${record.name}</td>
-                    <td>${record.email}</td>
-                    <td class="actions">
-                        <button onclick="editRecord(${record.id}, '${record.source}')">Detalles</button>
-                        <button onclick="deleteRecord(${record.id}, '${record.source}')">Eliminar</button>
-                    </td>
-                `;
-                tableElement.appendChild(row);
-            });
+        const table = document.getElementById('data-table');
+        const databaseSelect = document.getElementById('database');
+    
+        // Función para renderizar la tabla
+        async function renderTable() {
+            const databaseType = databaseSelect.value;
+    
+            try {
+                // Solicitar datos del backend
+                const response = await fetch(`http://localhost:3000/records?db=${databaseType}`);
+                const records = await response.json();
+    
+                // Limpiar la tabla
+                table.innerHTML = '';
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.id || ''}</td>
+                        <td>${record.name}</td>
+                        <td>${record.email}</td>
+                        <td class="actions">
+                            <button onclick="editRecord(${record.id})">Editar</button>
+                            <button onclick="deleteRecord(${record.id})">Eliminar</button>
+                        </td>
+                    `;
+                    table.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar los registros:', error);
+            }
         }
-
-        function updateTables() {
-            renderTable(mysqlDatabase, mysqlTable);
-            renderTable(mongodbDatabase, mongodbTable);
-        }
-
-        form.addEventListener('submit', event => {
+    
+        // Función para manejar el envío del formulario
+        form.addEventListener('submit', async event => {
             event.preventDefault();
-
-            const id = document.getElementById('id').value;
+    
+            const databaseType = databaseSelect.value;
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const source = document.getElementById('database').value;
-
-            if (id) {
-                const database = source === 'mysql' ? mysqlDatabase : mongodbDatabase;
-                const record = database.find(record => record.id == id);
-                if (record) {
-                    record.name = name;
-                    record.email = email;
-                }
-            } else {
-                // Add new record
-                const newRecord = { id: nextId++, name, email, source };
-                if (source === 'mysql') {
-                    mysqlDatabase.push(newRecord);
+    
+            try {
+                const response = await fetch(`http://localhost:3000/records?db=${databaseType}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email }),
+                });
+    
+                if (response.ok) {
+                    // Recargar la tabla después de guardar
+                    form.reset();
+                    renderTable();
                 } else {
-                    mongodbDatabase.push(newRecord);
+                    console.error('Error al guardar el registro:', response.statusText);
                 }
+            } catch (error) {
+                console.error('Error al enviar los datos:', error);
             }
-
-            form.reset();
-            updateTables();
         });
-
-        function editRecord(id, source) {
-            const database = source === 'mysql' ? mysqlDatabase : mongodbDatabase;
-            const record = database.find(record => record.id == id);
-            if (record) {
-                document.getElementById('id').value = record.id;
-                document.getElementById('name').value = record.name;
-                document.getElementById('email').value = record.email;
-                document.getElementById('database').value = source;
+    
+        // Función para editar un registro
+        async function editRecord(id) {
+            const databaseType = databaseSelect.value;
+    
+            try {
+                const response = await fetch(`http://localhost:3000/records/${id}?db=${databaseType}`);
+                const record = await response.json();
+    
+                if (record) {
+                    document.getElementById('name').value = record.name;
+                    document.getElementById('email').value = record.email;
+                } else {
+                    alert('Registro no encontrado.');
+                }
+            } catch (error) {
+                console.error('Error al cargar el registro:', error);
             }
         }
-
-        function deleteRecord(id, source) {
-            if (source === 'mysql') {
-                mysqlDatabase = mysqlDatabase.filter(record => record.id != id);
-            } else {
-                mongodbDatabase = mongodbDatabase.filter(record => record.id != id);
+    
+        // Función para eliminar un registro
+        async function deleteRecord(id) {
+            const databaseType = databaseSelect.value;
+    
+            try {
+                const response = await fetch(`http://localhost:3000/records/${id}?db=${databaseType}`, {
+                    method: 'DELETE',
+                });
+    
+                if (response.ok) {
+                    renderTable();
+                } else {
+                    console.error('Error al eliminar el registro:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error al eliminar el registro:', error);
             }
-            updateTables();
         }
-
-        updateTables();
+    
+        // Renderizar tabla inicial
+        databaseSelect.addEventListener('change', renderTable);
+        renderTable();
     </script>
 </body>
 </html>
