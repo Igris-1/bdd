@@ -29,7 +29,7 @@ Rendimiento: Adecuado para manejar datos estructurados y no estructurados en un 
 - un **server.js** para manejar MongoDB y MySQL
 
 # 2 Diagrama de Arquitectura:
-> link al diagrama
+> [Diagrama de arquitectura](https://github.com/Igris-1/bdd/blob/main/diagrama_de_arquitectura.jpeg)
 
 # 3 Configuración y Conexión a Bases de Datos:
 
