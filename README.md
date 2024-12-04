@@ -54,6 +54,30 @@ CREATE TABLE records (
 );
 ```
 
+Verificamos que la tabla se creo
+```
+SHOW TABLES;
+```
+
+Deberia mostrar algo como
+```
++----------------+
+| Tables_in_your_mysql_database |
++----------------+
+| records         |
++----------------+
+```
+
+Tambien podemos verificar la estructura de la tabla
+```
+DESCRIBE records;
+```
+
+Para salir de MySql solo basta con escribir en la terminal
+```
+exit
+```
+
 ## configurar MongoDB:
 No necesitas configuraciones adicionales. MongoDB creará la base y la colección automáticamente.
 
@@ -61,3 +85,9 @@ No necesitas configuraciones adicionales. MongoDB creará la base y la colecció
 ```
 node server.js
 ```
+
+Puertos donde se levanta el server, la base de datos y el front
+- Frontend (Live Server o similar)	5500 / 3000 (default)
+- Backend (Node.js/Express)	3000 (default)
+- MySQL	3306 (default)
+- MongoDB	27017 (default)
