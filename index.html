@@ -18,7 +18,7 @@
             padding: 10px 0;
         }
         main {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
             background: white;
@@ -60,9 +60,16 @@
         th {
             background: #f2f2f2;
         }
+        .table-container {
+            margin-bottom: 40px;
+        }
         .actions button {
             width: auto;
             margin-right: 5px;
+        }
+        .section-title {
+            color: #4CAF50;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -73,6 +80,7 @@
     <main>
         <form id="data-form">
             <h2>Agregar o Modificar Datos</h2>
+            <input type="hidden" id="id">
             <label for="database">Base de Datos:</label>
             <select id="database" required>
                 <option value="mysql">MySQL</option>
@@ -88,33 +96,51 @@
             <button type="submit">Guardar</button>
         </form>
 
-        <h2>Lista de Registros</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo Electrónico</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="data-table">
-                <!-- Aquí se llenarán dinámicamente los registros -->
-            </tbody>
-        </table>
+        <h2 class="section-title">Registros MySQL</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo Electrónico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="mysql-table">
+                    <!-- Registros de MySQL -->
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title">Registros MongoDB</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo Electrónico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="mongodb-table">
+                    <!-- Registros de MongoDB -->
+                </tbody>
+            </table>
+        </div>
     </main>
     <script>
-        // Simulamos una base de datos en memoria
-        let database = [];
+        let mysqlDatabase = [];
+        let mongodbDatabase = [];
         let nextId = 1;
 
-        // Referencias a elementos HTML
         const form = document.getElementById('data-form');
-        const table = document.getElementById('data-table');
+        const mysqlTable = document.getElementById('mysql-table');
+        const mongodbTable = document.getElementById('mongodb-table');
 
-        // Función para renderizar la tabla
-        function renderTable() {
-            table.innerHTML = '';
+        function renderTable(database, tableElement) {
+            tableElement.innerHTML = '';
             database.forEach(record => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -122,58 +148,69 @@
                     <td>${record.name}</td>
                     <td>${record.email}</td>
                     <td class="actions">
-                        <button onclick="editRecord(${record.id})">Editar</button>
-                        <button onclick="deleteRecord(${record.id})">Eliminar</button>
+                        <button onclick="editRecord(${record.id}, '${record.source}')">Detalles</button>
+                        <button onclick="deleteRecord(${record.id}, '${record.source}')">Eliminar</button>
                     </td>
                 `;
-                table.appendChild(row);
+                tableElement.appendChild(row);
             });
         }
 
-        // Función para manejar el envío del formulario
+        function updateTables() {
+            renderTable(mysqlDatabase, mysqlTable);
+            renderTable(mongodbDatabase, mongodbTable);
+        }
+
         form.addEventListener('submit', event => {
             event.preventDefault();
 
             const id = document.getElementById('id').value;
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
+            const source = document.getElementById('database').value;
 
             if (id) {
-                // Modificar registro existente
+                const database = source === 'mysql' ? mysqlDatabase : mongodbDatabase;
                 const record = database.find(record => record.id == id);
                 if (record) {
                     record.name = name;
                     record.email = email;
-                } else {
-                    alert('Registro no encontrado.');
                 }
             } else {
-                // Agregar nuevo registro
-                database.push({ id: nextId++, name, email });
+                // Add new record
+                const newRecord = { id: nextId++, name, email, source };
+                if (source === 'mysql') {
+                    mysqlDatabase.push(newRecord);
+                } else {
+                    mongodbDatabase.push(newRecord);
+                }
             }
 
             form.reset();
-            renderTable();
+            updateTables();
         });
 
-        // Función para editar un registro
-        function editRecord(id) {
+        function editRecord(id, source) {
+            const database = source === 'mysql' ? mysqlDatabase : mongodbDatabase;
             const record = database.find(record => record.id == id);
             if (record) {
                 document.getElementById('id').value = record.id;
                 document.getElementById('name').value = record.name;
                 document.getElementById('email').value = record.email;
+                document.getElementById('database').value = source;
             }
         }
 
-        // Función para eliminar un registro
-        function deleteRecord(id) {
-            database = database.filter(record => record.id != id);
-            renderTable();
+        function deleteRecord(id, source) {
+            if (source === 'mysql') {
+                mysqlDatabase = mysqlDatabase.filter(record => record.id != id);
+            } else {
+                mongodbDatabase = mongodbDatabase.filter(record => record.id != id);
+            }
+            updateTables();
         }
 
-        // Renderizar tabla inicial
-        renderTable();
+        updateTables();
     </script>
 </body>
 </html>
