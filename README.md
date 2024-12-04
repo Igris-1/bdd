@@ -1,4 +1,4 @@
-# TP de base de datos
+# Informe - TP de base de datos
 Integrantes
 > Nicolas Natale 108590
 
@@ -108,3 +108,28 @@ Puertos donde se levanta el server, la base de datos y el front
 
 # 4 Descripción de Funcionalidades CRUD:
 > Luego de levantar el backend, el front puede levantarse en localhost sin ningun problema para probar el guardado, elimininacion, modificacion y visualizacion de registros (funciones CRUD)
+
+# 5 Comparación entre Bases de Datos Relacionales y NoSQL:
+Base de Datos NoSQL (MongoDB)
+Ventajas:
+- Flexibilidad del Esquema: Los datos se almacenan en documentos JSON, lo que permite cambios rápidos en la estructura de los datos.
+- Escalabilidad Horizontal: MongoDB permite agregar más servidores fácilmente para distribuir la carga.
+- Velocidad en Lecturas/Escrituras: Para datos no estructurados o semi-estructurados, MongoDB puede ser más rápido que una base relacional.
+
+Desventajas:
+- Menor Consistencia: MongoDB utiliza un modelo eventual para garantizar la consistencia, lo que puede no ser adecuado para todas las aplicaciones.
+- Falta de Relaciones: No es ideal para datos que necesitan relaciones complejas (no tiene claves foráneas ni JOINs).
+- Sobrecarga de Datos Repetidos: Al no haber normalización, los datos pueden ser redundantes y ocupar más espacio.
+
+¿Cuándo Usar Cada Tipo de Base de Datos?
+Usar una Base Relacional (MySQL):
+- Aplicaciones con Alta Estructuración: Ideal para sistemas como ERP, CRM o sitios de e-commerce donde las relaciones entre los datos son críticas.
+- Integridad Crítica de Datos: Por ejemplo, sistemas bancarios o de contabilidad donde los errores son inaceptables.
+- Consultas Complejas: Requieren filtros avanzados o relaciones complejas entre entidades.
+
+Usar una Base NoSQL (MongoDB):
+- Datos No Estructurados o Semi-Estructurados: Como perfiles de usuario con atributos personalizados, documentos o logs.
+- Escalabilidad y Altas Escrituras: Aplicaciones que manejan grandes volúmenes de datos o necesitan escribir información rápidamente, como redes sociales o análisis en tiempo real.
+- Desarrollo Ágil: Proyectos donde los requisitos del esquema pueden cambiar con frecuencia, como prototipos o aplicaciones modernas.
+
+La elección entre MySQL y MongoDB depende del contexto y los requerimientos de la aplicación: estructura y relaciones complejas favorecen a MySQL, mientras que flexibilidad y escalabilidad horizontal hacen de MongoDB la mejor opción.
