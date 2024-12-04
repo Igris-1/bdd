@@ -97,3 +97,5 @@ Puertos donde se levanta el server, la base de datos y el front
 - Backend (Node.js/Express)	3000 (default)
 - MySQL	3306 (default)
 - MongoDB	27017 (default)
+
+> Luego de levantar el backend, el front puede levantarse en localhost sin ningun problema para probar el guardado, elimininacion, modificacion y visualizacion de registros
