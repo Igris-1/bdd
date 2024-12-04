@@ -14,7 +14,7 @@ Para este tp se hizo uso de las siguientes tecnologigias:
 - Se cuenta con un archivo **index.html** que es la interfaz grafica, dentro de la misma se prodra intercambiar entre base de dato *relacional* (MySQL) y una no *relacional* (NoSQL - MongoDB) como asi poder visualizar y modificar los registros
 - Un archivo **send.js** para manejar los envios
 - Un **back.js** para manejar el form del la interfaz grafica
-- un **server.js** para manejar MongoDB
+- un **server.js** para manejar MongoDB y MySQL
 
 
 # Metodo de instalacion
