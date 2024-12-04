@@ -1,4 +1,10 @@
 # TP de base de datos
+Integrantes
+> Nicolas Natale 108590
+
+> Pedro Bubuli 103452
+
+> Julian Sanchez 104590
 
 # Informe / metodo de utilización
 
