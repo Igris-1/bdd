@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Datos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, button, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        .actions button {
+            width: auto;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestión de Datos</h1>
+    </header>
+    <main>
+        <form id="data-form">
+            <h2>Agregar o Modificar Datos</h2>
+            <label for="database">Base de Datos:</label>
+            <select id="database" required>
+                <option value="mysql">MySQL</option>
+                <option value="mongodb">MongoDB</option>
+            </select>
+        
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
+        
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" required>
+        
+            <button type="submit">Guardar</button>
+        </form>
+
+        <h2>Lista de Registros</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo Electrónico</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+                <!-- Aquí se llenarán dinámicamente los registros -->
+            </tbody>
+        </table>
+    </main>
+    <script>
+        // Simulamos una base de datos en memoria
+        let database = [];
+        let nextId = 1;
+
+        // Referencias a elementos HTML
+        const form = document.getElementById('data-form');
+        const table = document.getElementById('data-table');
+
+        // Función para renderizar la tabla
+        function renderTable() {
+            table.innerHTML = '';
+            database.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.id}</td>
+                    <td>${record.name}</td>
+                    <td>${record.email}</td>
+                    <td class="actions">
+                        <button onclick="editRecord(${record.id})">Editar</button>
+                        <button onclick="deleteRecord(${record.id})">Eliminar</button>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        // Función para manejar el envío del formulario
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const id = document.getElementById('id').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            if (id) {
+                // Modificar registro existente
+                const record = database.find(record => record.id == id);
+                if (record) {
+                    record.name = name;
+                    record.email = email;
+                } else {
+                    alert('Registro no encontrado.');
+                }
+            } else {
+                // Agregar nuevo registro
+                database.push({ id: nextId++, name, email });
+            }
+
+            form.reset();
+            renderTable();
+        });
+
+        // Función para editar un registro
+        function editRecord(id) {
+            const record = database.find(record => record.id == id);
+            if (record) {
+                document.getElementById('id').value = record.id;
+                document.getElementById('name').value = record.name;
+                document.getElementById('email').value = record.email;
+            }
+        }
+
+        // Función para eliminar un registro
+        function deleteRecord(id) {
+            database = database.filter(record => record.id != id);
+            renderTable();
+        }
+
+        // Renderizar tabla inicial
+        renderTable();
+    </script>
+</body>
+</html>
